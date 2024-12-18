@@ -1,4 +1,5 @@
 ﻿namespace QuizApp;
+using Npgsql;
 
 class Program
 {
