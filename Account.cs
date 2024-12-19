@@ -1,3 +1,4 @@
+using Npgsql;
 public class Account : IAccountService
 {
     private NpgsqlConnection connection;
