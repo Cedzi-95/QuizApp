@@ -10,12 +10,12 @@ class Program
 
         connection.Open();
 
-        var createTableSql = @"CREATE TABLE IF NOT EXISTS users (id UUID PRIMARY KEY,
+        var createTableSql = @"CREATE TABLE IF NOT EXISTS users (user_id UUID PRIMARY KEY,
         name TEXT UNIQUE,
         password TEXT UNIQUE );
 
 
-        CREATE TABLE categories (
+        CREATE TABLE IF NOT EXISTS categories (
     category_id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT
@@ -23,19 +23,20 @@ class Program
         
         CREATE TABLE IF NOT EXISTS questions (question_id INT PRIMARY KEY,
         category_id INTEGER REFERENCES categories(category_id) ON DELETE CASCADE,
-        created_by UUID REFERENCES users(id) ON DELETE SET NULL,
+        created_by UUID REFERENCES users(user_id) ON DELETE SET NULL,
         question TEXT NOT NULL
         );
         
-        CREATE TABLE question_options (
+        CREATE TABLE IF NOT EXISTS question_options (
     option_id SERIAL PRIMARY KEY,
     question_id INTEGER REFERENCES questions(question_id) ON DELETE CASCADE,
     option_text TEXT NOT NULL,
     is_correct BOOLEAN NOT NULL 
     );
     
-    CREATE TABLE user_answers (
+    CREATE TABLE IF NOT EXISTS user_answers (
     answer_id SERIAL PRIMARY KEY,
+    user_id UUID REFERENCES users(user_id),
     question_id INTEGER REFERENCES questions(question_id) ON DELETE CASCADE,
     selected_option_id INTEGER REFERENCES question_options(option_id) ON DELETE CASCADE,
     is_correct BOOLEAN NOT NULL
