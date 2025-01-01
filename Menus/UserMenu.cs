@@ -2,7 +2,7 @@ public class UserMenu : Menu
 {
     public UserMenu(IAccountService accountService, IMenuService menuService) 
     {
-        
+        AddCommand(new HelpCommand(accountService, menuService));
     }
 
     public override void Display()

@@ -23,7 +23,6 @@ class Program
         
         CREATE TABLE IF NOT EXISTS questions (question_id INT PRIMARY KEY,
         category_id INTEGER REFERENCES categories(category_id) ON DELETE CASCADE,
-        created_by UUID REFERENCES users(user_id) ON DELETE SET NULL,
         question TEXT NOT NULL
         );
         
@@ -46,5 +45,29 @@ class Program
         using var cmd = new NpgsqlCommand(createTableSql, connection);
         cmd.ExecuteNonQuery();
 
+        IAccountService accountService = new Account(connection);
+        IMenuService menuService = new SimpleMenuService();
+
+        Menu initialMenu = new LoginMenu(accountService, menuService);
+        menuService.SetMenu(initialMenu);
+
+         while(true)
+          {
+            Console.WriteLine("> ");
+            string? inputCommand = Console.ReadLine()!;
+            if (inputCommand.ToLower() != null)
+             {
+                menuService.GetMenu().ExecuteCommand(inputCommand);
+            }
+             else
+             {
+                break;
+            }
+
+
+              
+                
+
     }
+}
 }

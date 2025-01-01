@@ -1,6 +1,6 @@
 public class RegisterCommand : Command
 {
-    public RegisterCommand (IAccountService accountService, IMenuService menuService) : base ("Register-user", accountService, menuService)
+    public RegisterCommand (IAccountService accountService, IMenuService menuService) : base ("register-user", accountService, menuService)
     {
 
     }
