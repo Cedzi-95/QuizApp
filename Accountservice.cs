@@ -3,4 +3,5 @@ public interface IAccountService {
     User? Login(string username, string password);
     void Logout();
     User? GetLoggedInUser();
+    
 }

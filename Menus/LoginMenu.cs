@@ -1,10 +1,10 @@
 public class LoginMenu : Menu
 {
 
-public LoginMenu(IAccountService accountService, IMenuService menuService)
+public LoginMenu(IAccountService accountService, IMenuService menuService, IQuizService quizService)
 {
-    AddCommand(new LoginCommand( accountService,  menuService));
-    AddCommand(new RegisterCommand(accountService,  menuService));
+    AddCommand(new LoginCommand( accountService,  menuService, quizService));
+    AddCommand(new RegisterCommand(accountService,  menuService, quizService));
 }
 
     public override void Display()

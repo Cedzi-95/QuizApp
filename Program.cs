@@ -47,8 +47,10 @@ class Program
 
         IAccountService accountService = new Account(connection);
         IMenuService menuService = new SimpleMenuService();
+        IQuizService quizService = new Quiz(connection);
+        
 
-        Menu initialMenu = new LoginMenu(accountService, menuService);
+        Menu initialMenu = new LoginMenu(accountService, menuService, quizService);
         menuService.SetMenu(initialMenu);
 
          while(true)
