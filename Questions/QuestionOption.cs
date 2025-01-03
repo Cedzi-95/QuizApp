@@ -1,4 +1,4 @@
-public class QuestionOption
+public class QuestionOption  
 {
     public int Id { get; set; }
     public int QuestionId { get; set; }

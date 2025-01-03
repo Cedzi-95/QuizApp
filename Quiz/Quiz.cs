@@ -30,12 +30,12 @@ public class Quiz : IQuizService
        return categories;
     }
 
-    public Category GetCategory(int id)
+    public Category GetCategory(string name)
     {
        var sql = @"SELECT category_id, name, description FROM categories
-       WHERE category_id = @id ";
+       WHERE name = @name ";
        using var cmd = new NpgsqlCommand(sql, connection);
-       cmd.Parameters.AddWithValue("@id", id);
+       cmd.Parameters.AddWithValue("@name", name);
        using var reader = cmd.ExecuteReader();
        if(reader.Read())
        {
@@ -50,7 +50,7 @@ public class Quiz : IQuizService
 
     }
 
-    public List<Question> GetQuestionsByCategory(int categoryId)
+    public List<Question> GetQuestionsByCategory(string name)
     {
         throw new NotImplementedException();
     }

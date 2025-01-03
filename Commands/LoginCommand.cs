@@ -22,3 +22,23 @@ public class LoginCommand : Command
         menuService.SetMenu(new UserMenu(accountService, menuService, quizService));
     }
 }
+
+
+
+
+
+
+public class LogoutCommand : Command
+{
+      public LogoutCommand(IAccountService accountService, IMenuService menuService, IQuizService quizService) :
+     base ("exit", accountService, menuService, quizService )
+    {
+
+    }
+
+     public override void Execute(string[] args)
+     {
+         accountService.Logout();
+        menuService.SetMenu(new LoginMenu(accountService, menuService, quizService));
+     }
+}
