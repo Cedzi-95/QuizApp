@@ -15,6 +15,7 @@ class Program
         password TEXT UNIQUE );
 
 
+
         CREATE TABLE IF NOT EXISTS categories (
     category_id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
@@ -41,9 +42,20 @@ class Program
     is_correct BOOLEAN NOT NULL
     );";
 
-
         using var cmd = new NpgsqlCommand(createTableSql, connection);
         cmd.ExecuteNonQuery();
+
+
+
+        var insertSql =@"INSERT INTO categories (name, description) VALUES 
+    ('Sports', 'Questions about sports and athletes'),
+    ('History', 'Questions about historical events and figures'),
+    ('Geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
+
+
+    using var insertCmd = new NpgsqlCommand(insertSql, connection);
+
+    insertCmd.ExecuteNonQuery();
 
         IAccountService accountService = new Account(connection);
         IMenuService menuService = new SimpleMenuService();
@@ -68,7 +80,7 @@ class Program
 
 
               
-                
+            
 
     }
 }
