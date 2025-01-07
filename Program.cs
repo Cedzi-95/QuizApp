@@ -41,9 +41,13 @@ class Program
     is_correct BOOLEAN NOT NULL
     );";
 
-
         using var cmd = new NpgsqlCommand(createTableSql, connection);
         cmd.ExecuteNonQuery();
+
+
+
+
+
 
         IAccountService accountService = new Account(connection);
         IMenuService menuService = new SimpleMenuService();

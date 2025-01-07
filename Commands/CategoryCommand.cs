@@ -8,6 +8,7 @@ public class CategoryCommand : Command
 
     public override void Execute(string[] args)
     {
+        
          var categories = quizService.GetCategories();
         Console.WriteLine("\nAvailable Categories:");
         foreach (var category in categories)
