@@ -15,6 +15,7 @@ class Program
         password TEXT UNIQUE );
 
 
+
         CREATE TABLE IF NOT EXISTS categories (
     category_id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
@@ -23,7 +24,8 @@ class Program
         
         CREATE TABLE IF NOT EXISTS questions (question_id INT PRIMARY KEY,
         category_id INTEGER REFERENCES categories(category_id) ON DELETE CASCADE,
-        question TEXT NOT NULL
+        question TEXT NOT NULL,
+        UNIQUE(question_id)
         );
         
         CREATE TABLE IF NOT EXISTS question_options (
@@ -40,14 +42,74 @@ class Program
     selected_option_id INTEGER REFERENCES question_options(option_id) ON DELETE CASCADE,
     is_correct BOOLEAN NOT NULL
     );";
-
-        using var cmd = new NpgsqlCommand(createTableSql, connection);
+     using var cmd = new NpgsqlCommand(createTableSql, connection);
         cmd.ExecuteNonQuery();
 
+//question options
+        var insertOptionSql = @"INSERT INTO question_options (question_id, option_text, is_correct) VALUES 
+    (1, 'France', TRUE),
+    (1, 'Germany', FALSE),
+    (1, 'Brazil', FALSE),
+    (1, 'Argentina', FALSE),
+
+    (2, '5', TRUE),
+    (2, '6', FALSE),
+    (2, '7', FALSE),
+    (2, '4', FALSE),
+
+    -- Options for History questions
+    (3, '1945', TRUE),
+    (3, '1940', FALSE),
+    (3, '1939', FALSE),
+    (3, '1950', FALSE),
+
+    (4, 'Augustus', TRUE),
+    (4, 'Julius Caesar', FALSE),
+    (4, 'Nero', FALSE),
+    (4, 'Caligula', FALSE),
+
+    -- Options for Geography questions
+    (5, 'Tokyo', TRUE),
+    (5, 'Seoul', FALSE),
+    (5, 'Beijing', FALSE),
+    (5, 'Bangkok', FALSE),
+
+    (6, 'Norway', TRUE),
+    (6, 'Sweden', FALSE),
+    (6, 'Canada', FALSE),
+    (6, 'Iceland', FALSE) ;";
+
+    using var insertquestionsoptionscmd = new NpgsqlCommand(insertOptionSql, connection);
+
+    insertquestionsoptionscmd.ExecuteNonQuery();
 
 
 
+        var insertSql =@"INSERT INTO categories (name, description) VALUES 
+    ('Sports', 'Questions about sports and athletes'),
+    ('History', 'Questions about historical events and figures'),
+    ('Geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
+    using var insertCmd = new NpgsqlCommand(insertSql, connection);
+    insertCmd.ExecuteNonQuery();
 
+
+
+    var insertQuestionsSql = @"INSERT INTO questions (question_id, category_id, question) 
+VALUES 
+    -- Sports
+    (1, 1, 'Which country won the FIFA World Cup in 2018?'),
+    (2, 1, 'How many players are there in a basketball team on the court?'),
+    
+
+    -- History
+    (3, 2, 'In which year did World War II end?'),
+    (4, 2, 'Who was the first emperor of the Roman Empire?'),
+
+    -- Geography
+    (5, 3, 'What is the capital of Japan?'),
+    (6, 3, 'Which country is known as the Land of the Midnight Sun?') ON CONFLICT (question_id) DO NOTHING;";
+    using var insertQuestionsCmd = new NpgsqlCommand(insertQuestionsSql, connection);
+    insertQuestionsCmd.ExecuteNonQuery();
 
         IAccountService accountService = new Account(connection);
         IMenuService menuService = new SimpleMenuService();
@@ -72,7 +134,7 @@ class Program
 
 
               
-                
+            
 
     }
 }
