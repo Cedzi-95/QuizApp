@@ -17,7 +17,7 @@ public class QuizCommand : Command
 
         var questions = quizService.GetQuestionsByCategory(categoryName);
         var user = accountService.GetLoggedInUser();
-        Console.WriteLine(questions);
+        
 
         foreach (var question in questions)
         {

@@ -36,17 +36,47 @@ class Program
     );
     
     CREATE TABLE IF NOT EXISTS user_answers (
-    answer_id SERIAL PRIMARY KEY,
+    answer_id INT PRIMARY KEY,
     user_id UUID REFERENCES users(user_id),
     question_id INTEGER REFERENCES questions(question_id) ON DELETE CASCADE,
-    selected_option_id INTEGER REFERENCES question_options(option_id) ON DELETE CASCADE,
-    is_correct BOOLEAN NOT NULL
+    selected_option_id INTEGER REFERENCES question_options(option_id) 
+   
     );";
      using var cmd = new NpgsqlCommand(createTableSql, connection);
         cmd.ExecuteNonQuery();
 
 //question options
-        var insertOptionSql = @"INSERT INTO question_options (question_id, option_text, is_correct) VALUES 
+
+
+        var insertSql =@"INSERT INTO categories (name, description) VALUES 
+    ('sports', 'Questions about sports and athletes'),
+    ('history', 'Questions about historical events and figures'),
+    ('geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
+    using var insertCmd = new NpgsqlCommand(insertSql, connection);
+    insertCmd.ExecuteNonQuery();
+
+
+
+    var insertQuestionsSql = @"INSERT INTO questions (question_id, category_id, question) 
+VALUES 
+    -- Sports
+    (1, 1, 'Which country won the FIFA World Cup in 2018?'),
+    (2, 1, 'How many players are there in a basketball team on the court?'),
+    
+
+    -- History
+    (3, 2, 'In which year did World War II end?'),
+    (4, 2, 'Who was the first emperor of the Roman Empire?'),
+
+    -- Geography
+    (5, 3, 'What is the capital of Japan?'),
+    (6, 3, 'Which country is known as the Land of the Midnight Sun?') ON CONFLICT (question_id) DO NOTHING;";
+    using var insertQuestionsCmd = new NpgsqlCommand(insertQuestionsSql, connection);
+    insertQuestionsCmd.ExecuteNonQuery();
+
+
+
+            var insertOptionSql = @"INSERT INTO question_options (question_id, option_text, is_correct) VALUES 
     (1, 'France', TRUE),
     (1, 'Germany', FALSE),
     (1, 'Brazil', FALSE),
@@ -79,37 +109,11 @@ class Program
     (6, 'Canada', FALSE),
     (6, 'Iceland', FALSE) ;";
 
-    using var insertquestionsoptionscmd = new NpgsqlCommand(insertOptionSql, connection);
+    using var insertQuestionsOptionsCmd = new NpgsqlCommand(insertOptionSql, connection);
 
-    insertquestionsoptionscmd.ExecuteNonQuery();
-
-
-
-        var insertSql =@"INSERT INTO categories (name, description) VALUES 
-    ('sports', 'Questions about sports and athletes'),
-    ('history', 'Questions about historical events and figures'),
-    ('geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
-    using var insertCmd = new NpgsqlCommand(insertSql, connection);
-    insertCmd.ExecuteNonQuery();
+    insertQuestionsOptionsCmd.ExecuteNonQuery();
 
 
-
-    var insertQuestionsSql = @"INSERT INTO questions (question_id, category_id, question) 
-VALUES 
-    -- Sports
-    (1, 1, 'Which country won the FIFA World Cup in 2018?'),
-    (2, 1, 'How many players are there in a basketball team on the court?'),
-    
-
-    -- History
-    (3, 2, 'In which year did World War II end?'),
-    (4, 2, 'Who was the first emperor of the Roman Empire?'),
-
-    -- Geography
-    (5, 3, 'What is the capital of Japan?'),
-    (6, 3, 'Which country is known as the Land of the Midnight Sun?') ON CONFLICT (question_id) DO NOTHING;";
-    using var insertQuestionsCmd = new NpgsqlCommand(insertQuestionsSql, connection);
-    insertQuestionsCmd.ExecuteNonQuery();
 
         IAccountService accountService = new Account(connection);
         IMenuService menuService = new SimpleMenuService();
@@ -121,6 +125,8 @@ VALUES
 
          while(true)
           {
+            try
+            {
             Console.WriteLine("> ");
             string? inputCommand = Console.ReadLine()!;
             if (inputCommand.ToLower() != null)
@@ -130,6 +136,10 @@ VALUES
              else
              {
                 break;
+            }
+            } catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
 
