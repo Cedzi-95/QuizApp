@@ -31,7 +31,7 @@ public class Quiz : IQuizService
     }
 
     public Category GetCategory(string name)
-    {
+    { Category category = new Category();
        var sql = @"SELECT category_id, name, description FROM categories
        WHERE name = @name ";
        using var cmd = new NpgsqlCommand(sql, connection);
@@ -52,7 +52,45 @@ public class Quiz : IQuizService
 
     public List<Question> GetQuestionsByCategory(string name)
     {
-        throw new NotImplementedException();
+
+         var questions = new List<Question>();
+        var sql = @"
+            SELECT q.question_id, q.category_id, q.question, 
+                   qo.option_id, qo.option_text, qo.is_correct
+            FROM questions q
+            INNER JOIN question_options qo ON q.question_id = qo.question_id
+            INNER JOIN categories c on c.category_id = q.category_id
+            WHERE c.name = @name";
+
+        using var cmd = new NpgsqlCommand(sql, connection);
+        cmd.Parameters.AddWithValue("@name", name);
+        using var reader = cmd.ExecuteReader();
+
+        Question currentQuestion = null;
+        while (reader.Read())
+        {
+            var questionId = reader.GetInt32(0);
+            
+            if (currentQuestion == null || currentQuestion.Id != questionId)
+            {
+                currentQuestion = new Question
+                {
+                    Id = questionId,
+                    CategoryId = reader.GetInt32(1),
+                    QuestionText = reader.GetString(2)
+                };
+                questions.Add(currentQuestion);
+            }
+
+            currentQuestion.Options.Add(new QuestionOption
+            {
+                Id = reader.GetInt32(3),
+                QuestionId = questionId,
+                OptionText = reader.GetString(4),
+                IsCorrect = reader.GetBoolean(5)
+            });
+        }
+        return questions;
     }
 
     public List<UserAnswer> GetUserHistory(Guid userId)

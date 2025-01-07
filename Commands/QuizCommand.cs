@@ -3,7 +3,7 @@ using System;
 
 public class QuizCommand : Command
 {
-    private IQuizService quizService;
+  
     public QuizCommand(IAccountService accountService, IMenuService menuService, IQuizService quizService) :
      base("Quiz", accountService, menuService, quizService)
     {
@@ -17,6 +17,7 @@ public class QuizCommand : Command
 
         var questions = quizService.GetQuestionsByCategory(categoryName);
         var user = accountService.GetLoggedInUser();
+        Console.WriteLine(questions);
 
         foreach (var question in questions)
         {

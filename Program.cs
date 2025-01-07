@@ -86,9 +86,9 @@ class Program
 
 
         var insertSql =@"INSERT INTO categories (name, description) VALUES 
-    ('Sports', 'Questions about sports and athletes'),
-    ('History', 'Questions about historical events and figures'),
-    ('Geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
+    ('sports', 'Questions about sports and athletes'),
+    ('history', 'Questions about historical events and figures'),
+    ('geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
     using var insertCmd = new NpgsqlCommand(insertSql, connection);
     insertCmd.ExecuteNonQuery();
 
