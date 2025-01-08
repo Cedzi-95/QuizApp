@@ -94,8 +94,31 @@ public class Quiz : IQuizService
     }
 
     public List<UserAnswer> GetUserHistory(Guid userId)
-    {
-        throw new NotImplementedException();
+    { // question_id | selected_option_id | is_correct
+       var sql = @"SELECT question_id, selected_option_id, is_correct
+       FROM user_answers WHERE user_id = @userId";
+       using var cmd = new NpgsqlCommand(sql, connection);
+       cmd.Parameters.AddWithValue("@userId", userId);
+
+       using var reader = cmd.ExecuteReader();
+
+       List<UserAnswer> Answers = new List <UserAnswer>();
+
+       while(reader.Read())
+       {
+        Answers.Add(new UserAnswer
+        {
+           
+             QuestionId = reader.GetInt32(0),         // Första kolumnen (index 0)
+            SelectedOptionId = reader.GetInt32(1),   // Andra kolumnen (index 1)
+            IsCorrect = reader.GetBoolean(2),        // Tredje kolumnen (index 2)
+            UserId = userId                  
+
+        });
+       }
+       return Answers;
+
+
     }
 
     public int GetUserScore(Guid userId)

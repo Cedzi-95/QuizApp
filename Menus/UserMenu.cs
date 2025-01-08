@@ -8,6 +8,7 @@ public class UserMenu : Menu
         AddCommand(new QuizCommand(accountService, menuService, quizService));
         AddCommand(new ScoreCommand(accountService, menuService, quizService));
         AddCommand(new LogoutCommand(accountService, menuService, quizService));
+         AddCommand(new HistoryCommand(accountService, menuService, quizService));
     }
 
     public override void Display()
