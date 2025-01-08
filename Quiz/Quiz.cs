@@ -1,6 +1,8 @@
 using Npgsql;
 public class Quiz : IQuizService
 {
+
+    //hej
       private NpgsqlConnection connection;
     //   private IAccountSerice accountService;
     //   private IMenuService menuService;
