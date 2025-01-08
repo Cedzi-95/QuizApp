@@ -5,8 +5,8 @@ public class UserMenu : Menu
         // AddCommand(new HelpCommand(accountService, menuService));
         AddCommand(new QuizCommand(accountService, menuService, quizService));
         AddCommand(new CategoryCommand(accountService, menuService, quizService));
-        AddCommand(new QuizCommand(accountService, menuService, quizService));
         AddCommand(new ScoreCommand(accountService, menuService, quizService));
+         AddCommand(new HistoryCommand(accountService, menuService, quizService));
         AddCommand(new LogoutCommand(accountService, menuService, quizService));
     }
 

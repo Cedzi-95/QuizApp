@@ -2,7 +2,7 @@ using Npgsql;
 public class Quiz : IQuizService
 {
 
-    //hej
+
       private NpgsqlConnection connection;
     //   private IAccountSerice accountService;
     //   private IMenuService menuService;
@@ -95,14 +95,42 @@ public class Quiz : IQuizService
         return questions;
     }
 
-    public List<UserAnswer> GetUserHistory(Guid userId)
+   public List<UserAnswer> GetUserHistory(Guid userId)
+{
+    var userAnswers = new List<UserAnswer>();
+    var sql = @"SELECT answer_id, user_id, question_id, selected_option_id, is_correct
+                FROM user_answers
+                WHERE user_id = @userId";
+
+    using var cmd = new NpgsqlCommand(sql, connection);
+    cmd.Parameters.AddWithValue("@userId", userId);
+
+    using var reader = cmd.ExecuteReader();
+    while (reader.Read())
     {
-        throw new NotImplementedException();
+        userAnswers.Add(new UserAnswer
+        {
+            Id = reader.GetInt32(0), // answer_id
+            UserId = reader.GetGuid(1),
+            QuestionId = reader.GetInt32(2),
+            SelectedOptionId = reader.GetInt32(3),
+            IsCorrect = reader.GetBoolean(4)
+        });
     }
+
+    return userAnswers;
+}
 
     public int GetUserScore(Guid userId)
     {
-        throw new NotImplementedException();
+       var sql = @"SELECT COUNT(*) is_correct FROM user_answers
+       WHERE user_id = @userId AND is_correct = true";
+
+       using var cmd = new NpgsqlCommand(sql, connection);
+       cmd.Parameters.AddWithValue("@userId", userId);
+
+
+       return Convert.ToInt32(cmd.ExecuteScalar());
     }
 
     public bool SubmitAnswer(Guid userId, int questionId, int selectedOptionId)
