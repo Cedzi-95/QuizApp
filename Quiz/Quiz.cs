@@ -95,12 +95,27 @@ public class Quiz : IQuizService
 
     public List<UserAnswer> GetUserHistory(Guid userId)
     {
-        throw new NotImplementedException();
+       var sql = @"SELECT  question_id, selected_option_id, is_correct 
+       FROM user_answers WHERE user_id = @userId";
+       using var cmd = new NnpgsqlCommand(sql, connection);
+       cmd.Parameters.AddWithValue("@userId", userId);
+       
     }
 
     public int GetUserScore(Guid userId)
     {
-        throw new NotImplementedException();
+       var sql = @"SELECT COUNT(*) is_correct FROM user_answers
+       WHERE user_id = @userId AND is_correct = true";
+
+       using var cmd = new NpgsqlCommand(sql, connection);
+       cmd.Parameters.AddWithValue("@userId", userId);
+       
+    
+       return Convert.ToInt32(cmd.ExecuteScalar());
+
+
+
+
     }
 
     public bool SubmitAnswer(Guid userId, int questionId, int selectedOptionId)
