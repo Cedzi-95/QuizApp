@@ -95,11 +95,7 @@ public class Quiz : IQuizService
 
     public List<UserAnswer> GetUserHistory(Guid userId)
     {
-       var sql = @"SELECT  question_id, selected_option_id, is_correct 
-       FROM user_answers WHERE user_id = @userId";
-       using var cmd = new NnpgsqlCommand(sql, connection);
-       cmd.Parameters.AddWithValue("@userId", userId);
-       
+        throw new NotImplementedException();
     }
 
     public int GetUserScore(Guid userId)
