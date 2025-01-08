@@ -36,10 +36,11 @@ class Program
     );
     
     CREATE TABLE IF NOT EXISTS user_answers (
-    answer_id INT PRIMARY KEY,
+    answer_id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES users(user_id),
     question_id INTEGER REFERENCES questions(question_id) ON DELETE CASCADE,
-    selected_option_id INTEGER REFERENCES question_options(option_id) 
+    selected_option_id INTEGER REFERENCES question_options(option_id) ,
+    is_correct BOOLEAN NOT NULL
    
     );";
      using var cmd = new NpgsqlCommand(createTableSql, connection);

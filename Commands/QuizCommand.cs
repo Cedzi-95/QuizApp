@@ -32,7 +32,7 @@ public class QuizCommand : Command
                 answer > 0 &&
                 answer <= question.Options.Count)
             {
-                var selectedOption = question.Options[answer - 1];
+                var selectedOption = question.Options[answer - 1]; //om svaret är lika med en av svarsalternativerna
                 var isCorrect = quizService.SubmitAnswer(user.Id, question.Id, selectedOption.Id);
                 Console.WriteLine(isCorrect ? "Correct!" : "Incorrect!");
             }

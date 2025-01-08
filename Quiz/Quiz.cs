@@ -31,7 +31,7 @@ public class Quiz : IQuizService
     }
 
     public Category GetCategory(string name)
-    { 
+    { Category category = new Category();
        var sql = @"SELECT category_id, name, description FROM categories
        WHERE name = @name ";
        using var cmd = new NpgsqlCommand(sql, connection);
@@ -105,6 +105,25 @@ public class Quiz : IQuizService
 
     public bool SubmitAnswer(Guid userId, int questionId, int selectedOptionId)
     {
-        throw new NotImplementedException();
+       
+        var sql = @"SELECT is_correct FROM question_options WHERE option_id = @optionId AND question_id = @questionId";
+        using var cmd = new NpgsqlCommand(sql, connection);
+        cmd.Parameters.AddWithValue("@optionId", selectedOptionId);
+        cmd.Parameters.AddWithValue("@questionId", questionId);
+        var isCorrect = (bool)cmd.ExecuteScalar();
+
+        //lägger in user svaret i user_answers tabellen
+        var userAnswerSql = @"INSERT INTO user_answers (user_id, question_id, selected_option_id, is_correct) VALUES
+        (@userId, @questionId, @optionId, @isCorrect)";
+        using var userAnswerCmd = new NpgsqlCommand(userAnswerSql, connection);
+        userAnswerCmd.Parameters.AddWithValue("@userId", userId);
+        userAnswerCmd.Parameters.AddWithValue("@questionId", questionId);
+        userAnswerCmd.Parameters.AddWithValue("@optionId", selectedOptionId);
+        userAnswerCmd.Parameters.AddWithValue("@isCorrect", isCorrect);
+
+       userAnswerCmd.ExecuteNonQuery();
+
+        return isCorrect;
+
     }
 }
