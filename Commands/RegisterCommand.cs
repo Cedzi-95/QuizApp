@@ -12,7 +12,7 @@ public class RegisterCommand : Command
         string password = args[2];
 
         accountService.RegisterUser(username, password);
-        Console.WriteLine($"User {username} has been created. You may now login!");
+        Console.WriteLine($"User{Colours.YELLOW} {username}{Colours.NORMAL} has been created. You may now login!");
 
 
 

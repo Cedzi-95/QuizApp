@@ -8,7 +8,7 @@ public class HelpCommand : Command
 
     public override void Execute(string[] args)
     {
-        Console.WriteLine("Below is a list of commands for quiz app. ");
+        Console.WriteLine($"{Colours.GREEN}Below is a list of commands for quiz app.{Colours.NORMAL} ");
         Console.WriteLine("Type <category> to view different categories.");
         Console.WriteLine("Type <score> to view your results.");
         Console.WriteLine("Type<logout> to logout");

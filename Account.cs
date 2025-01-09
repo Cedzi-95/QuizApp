@@ -89,4 +89,25 @@ public class Account : IAccountService
         return user;
     }
 
+    public void RemoveUser()
+    {
+    var user = GetLoggedInUser();
+       
+
+        var sql = @"
+        BEGIN;
+  DELETE FROM user_answers 
+  WHERE user_id = @userId;
+  
+  DELETE FROM users 
+  WHERE user_id = @userId;
+COMMIT;";
+using var cmd = new NpgsqlCommand(sql, connection);
+cmd.Parameters.AddWithValue("@userId", user.Id);
+cmd.ExecuteNonQuery();
+Console.WriteLine($"{Colours.RED} your account has been deleted!{Colours.NORMAL}");
+
+
+    }
+
 }
