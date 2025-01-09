@@ -14,5 +14,7 @@ public class HistoryCommand : Command
                             $"Selected Option: {answer.SelectedOptionId}, " +
                             $"Correct: {answer.IsCorrect}");
         }
+        Console.ReadKey();
+        menuService.SetMenu(new UserMenu(accountService, menuService, quizService));
     }
 }
