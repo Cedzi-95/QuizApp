@@ -14,10 +14,10 @@ public class CategoryCommand : Command
 
         
          var categories = quizService.GetCategories();
-        Console.WriteLine("\nAvailable Categories:");
+        Console.WriteLine($"{Colours.GREEN}\n       Available Categories:{Colours.NORMAL}");
         foreach (var category in categories)
         {
-            Console.WriteLine($"{category.Id}. {category.Name} - {category.Description}");
+            Console.WriteLine($"{Colours.YELLOW}{category.Id}. {category.Name}{Colours.NORMAL} - {category.Description}");
         }
    
     }

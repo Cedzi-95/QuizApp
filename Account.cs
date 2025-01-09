@@ -89,32 +89,25 @@ public class Account : IAccountService
         return user;
     }
 
- public bool DeleteAccount(Guid userId)
-{
-    try
+    public void RemoveUser()
     {
-        connection.Open();
+    var user = GetLoggedInUser();
+       
 
-        string query = "DELETE FROM Users WHERE Id = @Id";
-        using (var command = new NpgsqlCommand(query, connection))
-        {
-            command.Parameters.AddWithValue("@Id", userId);
-            int rowsAffected = command.ExecuteNonQuery();
-            return rowsAffected > 0;
-        }
+        var sql = @"
+        BEGIN;
+  DELETE FROM user_answers 
+  WHERE user_id = @userId;
+  
+  DELETE FROM users 
+  WHERE user_id = @userId;
+COMMIT;";
+using var cmd = new NpgsqlCommand(sql, connection);
+cmd.Parameters.AddWithValue("@userId", user.Id);
+cmd.ExecuteNonQuery();
+Console.WriteLine($"{Colours.RED} your account has been deleted!{Colours.NORMAL}");
+
+
     }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error deleting account: {ex.Message}");
-        return false;
-    }
-    finally
-    {
-        if (connection.State == System.Data.ConnectionState.Open)
-        {
-            connection.Close();
-        }
-    }
-}
 
 }

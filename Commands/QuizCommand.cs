@@ -12,7 +12,7 @@ public class QuizCommand : Command
 
     public override void Execute(string[] args)
     {
-        Console.WriteLine("\nEnter category name to start quiz:");
+        Console.WriteLine($"{Colours.GREEN}\nEnter category name to start quiz:{Colours.NORMAL}");
         string categoryName = Console.ReadLine()!;
 
         var questions = quizService.GetQuestionsByCategory(categoryName);
@@ -21,10 +21,10 @@ public class QuizCommand : Command
 
         foreach (var question in questions)
         {
-            Console.WriteLine($"\n{question.QuestionText}");
+            Console.WriteLine($"{Colours.GREEN}\n{question.QuestionText}{Colours.NORMAL}");
             for (int i = 0; i < question.Options.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {question.Options[i].OptionText}");
+                Console.WriteLine($"{Colours.YELLOW}[{i + 1}].{Colours.NORMAL} {question.Options[i].OptionText}");
             }
 
             Console.Write("\nYour answer (enter number): ");
@@ -34,7 +34,7 @@ public class QuizCommand : Command
             {
                 var selectedOption = question.Options[answer - 1]; //om svaret är lika med en av svarsalternativerna
                 var isCorrect = quizService.SubmitAnswer(user.Id, question.Id, selectedOption.Id);
-                Console.WriteLine(isCorrect ? "Correct!" : "Incorrect!");
+                Console.WriteLine(isCorrect ? $"{Colours.GREEN}Correct!{Colours.NORMAL}" : $"{Colours.RED}Incorrect!{Colours.NORMAL}");
             }
             else
             {
