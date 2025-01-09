@@ -6,5 +6,7 @@ public class DeleteAccountCommand : Command
     public override void Execute(string[] args)
     {
         accountService.RemoveUser();
+        Thread.Sleep(3000);
+        menuService.SetMenu(new LoginMenu(accountService, menuService, quizService));
     }
 }

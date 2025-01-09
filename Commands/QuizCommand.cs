@@ -38,11 +38,13 @@ public class QuizCommand : Command
             }
             else
             {
-                Console.WriteLine("Invalid answer, skipping question.");
+                Console.WriteLine($"{Colours.RED}Invalid answer, skipping question.{Colours.NORMAL}");
             }
         }
 
 
+            Console.ReadKey();
+            menuService.SetMenu(new UserMenu(accountService, menuService, quizService));
 
 
 

@@ -9,6 +9,7 @@ public LoginMenu(IAccountService accountService, IMenuService menuService, IQuiz
 
     public override void Display()
     {
+        Console.Clear();
           Console.WriteLine($"{Colours.GREEN}               \nWELCOME TO YOUR QUIZ APP  {Colours.NORMAL}");
         Console.WriteLine("---------------------------------------------------------");
         Console.WriteLine($"||login <username> <password> - Log into your account");

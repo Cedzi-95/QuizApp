@@ -19,6 +19,9 @@ public class CategoryCommand : Command
         {
             Console.WriteLine($"{Colours.YELLOW}{category.Id}. {category.Name}{Colours.NORMAL} - {category.Description}");
         }
+        Console.WriteLine("\npress key to continue...");
+        Console.ReadKey();
+        menuService.SetMenu(new UserMenu(accountService, menuService, quizService));
    
     }
 

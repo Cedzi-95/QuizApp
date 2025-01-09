@@ -10,6 +10,6 @@ public class ScoreCommand : Command
     {
          var user = accountService.GetLoggedInUser();
         var score = quizService.GetUserScore(user.Id);
-        Console.WriteLine($"{Colours.GREEN}\nYour total score: {score} correct answers{Colours.YELLOW}");
+        Console.WriteLine($"\nYour total score:{Colours.GREEN} {score} correct answers{Colours.YELLOW}");
     }
 }
