@@ -89,4 +89,32 @@ public class Account : IAccountService
         return user;
     }
 
+ public bool DeleteAccount(Guid userId)
+{
+    try
+    {
+        connection.Open();
+
+        string query = "DELETE FROM Users WHERE Id = @Id";
+        using (var command = new NpgsqlCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@Id", userId);
+            int rowsAffected = command.ExecuteNonQuery();
+            return rowsAffected > 0;
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error deleting account: {ex.Message}");
+        return false;
+    }
+    finally
+    {
+        if (connection.State == System.Data.ConnectionState.Open)
+        {
+            connection.Close();
+        }
+    }
+}
+
 }
