@@ -39,20 +39,26 @@ class Program
     answer_id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES users(user_id),
     question_id INTEGER REFERENCES questions(question_id) ON DELETE CASCADE,
+<<<<<<< HEAD
     selected_option_id INTEGER REFERENCES question_options(option_id),
     is_correct BOOLEAN NOT NULL
 );";
 
+=======
+    selected_option_id INTEGER REFERENCES question_options(option_id) ON DELETE CASCADE,
+    is_correct BOOLEAN NOT NULL
+    );";
+>>>>>>> master
      using var cmd = new NpgsqlCommand(createTableSql, connection);
         cmd.ExecuteNonQuery();
 
-//question options
+
 
 
         var insertSql =@"INSERT INTO categories (name, description) VALUES 
-    ('sports', 'Questions about sports and athletes'),
-    ('history', 'Questions about historical events and figures'),
-    ('geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
+    ('Sports', 'Questions about sports and athletes'),
+    ('History', 'Questions about historical events and figures'),
+    ('Geography', 'Questions about countries, capitals, and geography') ON CONFLICT (name) DO NOTHING;";
     using var insertCmd = new NpgsqlCommand(insertSql, connection);
     insertCmd.ExecuteNonQuery();
 
@@ -61,60 +67,128 @@ class Program
     var insertQuestionsSql = @"INSERT INTO questions (question_id, category_id, question) 
 VALUES 
     -- Sports
+
     (1, 1, 'Which country won the FIFA World Cup in 2018?'),
     (2, 1, 'How many players are there in a basketball team on the court?'),
+    (3, 1, 'Who holds the record for the most Olympic gold medals?'),
+    (4, 1, 'What is the maximum score in a single game of ten-pin bowling?'),
+    (5, 1, 'Which country is famous for the sport sumo wrestling?'),
     
 
     -- History
-    (3, 2, 'In which year did World War II end?'),
-    (4, 2, 'Who was the first emperor of the Roman Empire?'),
+    (6, 2, 'In which year did World War II end?'),
+    (7, 2, 'Who was the first emperor of the Roman Empire?'),
+    (8, 2, 'What was the name of the ship that sank on its maiden voyage in 1912?'),
+    (9, 2, 'Which treaty ended World War I?'),
+    (10, 2, 'Who discovered the Americas in 1492?'),
+
 
     -- Geography
-    (5, 3, 'What is the capital of Japan?'),
-    (6, 3, 'Which country is known as the Land of the Midnight Sun?') ON CONFLICT (question_id) DO NOTHING;";
+    (11, 3, 'What is the capital of Japan?'),
+    (12, 3, 'Which country is known as the Land of the Midnight Sun?'),
+    (13, 3, 'What is the longest river in the world?'),
+    (14, 3, 'What is the smallest country in the world?'),
+    (15, 3, 'Which desert is the largest in the world?') ON CONFLICT (question_id) DO NOTHING;";
     using var insertQuestionsCmd = new NpgsqlCommand(insertQuestionsSql, connection);
     insertQuestionsCmd.ExecuteNonQuery();
 
-
-
-            var insertOptionSql = @"INSERT INTO question_options (question_id, option_text, is_correct) VALUES 
+    //question options
+        var insertOptionSql = @"INSERT INTO question_options (question_id, option_text, is_correct) VALUES 
+     -- Sports
     (1, 'France', TRUE),
     (1, 'Germany', FALSE),
     (1, 'Brazil', FALSE),
     (1, 'Argentina', FALSE),
+    (1, 'Italy', FALSE),
 
-    (2, '5', TRUE),
-    (2, '6', FALSE),
+    (2, '5', FALSE),
+    (2, '6', TRUE),
     (2, '7', FALSE),
-    (2, '4', FALSE),
+    (2, '8', FALSE),
+    (2, '9', FALSE),
 
-    -- Options for History questions
-    (3, '1945', TRUE),
-    (3, '1940', FALSE),
-    (3, '1939', FALSE),
-    (3, '1950', FALSE),
+    (3, 'Michael Phelps', TRUE),
+    (3, 'Usain Bolt', FALSE),
+    (3, 'Carl Lewis', FALSE),
+    (3, 'Mark Spitz', FALSE),
+    (3, 'Simone Biles', FALSE),
 
-    (4, 'Augustus', TRUE),
-    (4, 'Julius Caesar', FALSE),
-    (4, 'Nero', FALSE),
-    (4, 'Caligula', FALSE),
+    (4, '300', FALSE),
+    (4, '450', FALSE),
+    (4, '500', FALSE),
+    (4, '600', TRUE),
+    (4, '750', FALSE),
+
+    (5, 'China', FALSE),
+    (5, 'Japan', TRUE),
+    (5, 'South Korea', FALSE),
+    (5, 'Thailand', FALSE),
+    (5, 'Mongolia', FALSE),
+
+    -- History
+    (6, '1945', TRUE),
+    (6, '1939', FALSE),
+    (6, '1940', FALSE),
+    (6, '1950', FALSE),
+    (6, '1960', FALSE),
+
+    (7, 'Julius Caesar', FALSE),
+    (7, 'Augustus', TRUE),
+    (7, 'Nero', FALSE),
+    (7, 'Caligula', FALSE),
+    (7, 'Trajan', FALSE),
+
+    (8, 'Titanic', TRUE),
+    (8, 'Lusitania', FALSE),
+    (8, 'Queen Mary', FALSE),
+    (8, 'Carpathia', FALSE),
+    (8, 'Bismarck', FALSE),
+
+    (9, 'Treaty of Versailles', TRUE),
+    (9, 'Treaty of Paris', FALSE),
+    (9, 'Treaty of Tordesillas', FALSE),
+    (9, 'Treaty of Ghent', FALSE),
+    (9, 'Treaty of Utrecht', FALSE),
+
+    (10, 'Christopher Columbus', TRUE),
+    (10, 'Ferdinand Magellan', FALSE),
+    (10, 'Amerigo Vespucci', FALSE),
+    (10, 'Marco Polo', FALSE),
+    (10, 'Leif Erikson', FALSE),
 
     -- Options for Geography questions
-    (5, 'Tokyo', TRUE),
-    (5, 'Seoul', FALSE),
-    (5, 'Beijing', FALSE),
-    (5, 'Bangkok', FALSE),
+    (11, 'Tokyo', TRUE),
+    (11, 'Kyoto', FALSE),
+    (11, 'Osaka', FALSE),
+    (11, 'Nagoya', FALSE),
 
-    (6, 'Norway', TRUE),
-    (6, 'Sweden', FALSE),
-    (6, 'Canada', FALSE),
-    (6, 'Iceland', FALSE) ;";
+    -- Fråga 2
+    (12, 'Norway', TRUE),
+    (12, 'Sweden', FALSE),
+    (12, 'Finland', FALSE),
+    (12, 'Iceland', FALSE),
 
-    using var insertQuestionsOptionsCmd = new NpgsqlCommand(insertOptionSql, connection);
+    -- Fråga 3
+    (13, 'Nile', TRUE),
+    (13, 'Amazon', FALSE),
+    (13, 'Yangtze', FALSE),
+    (13, 'Mississippi', FALSE),
 
-    insertQuestionsOptionsCmd.ExecuteNonQuery();
+    -- Fråga 4
+    (14, 'Vatican City', TRUE),
+    (14, 'Monaco', FALSE),
+    (14, 'San Marino', FALSE),
+    (14, 'Liechtenstein', FALSE),
 
+    -- Fråga 5
+    (15, 'Sahara', TRUE),
+    (15, 'Arctic', FALSE),
+    (15, 'Gobi', FALSE),
+    (15, 'Kalahari', FALSE);";
 
+    using var insertquestionsoptionscmd = new NpgsqlCommand(insertOptionSql, connection);
+
+    insertquestionsoptionscmd.ExecuteNonQuery();
 
         IAccountService accountService = new Account(connection);
         IMenuService menuService = new SimpleMenuService();
@@ -126,8 +200,6 @@ VALUES
 
          while(true)
           {
-            try
-            {
             Console.WriteLine("> ");
             string? inputCommand = Console.ReadLine()!;
             if (inputCommand.ToLower() != null)
@@ -138,15 +210,9 @@ VALUES
              {
                 break;
             }
-            } catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
 
+        }
 
-              
-            
-
-    }
+        
 }
 }
