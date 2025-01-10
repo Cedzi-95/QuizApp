@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Npgsql;
 public class Account : IAccountService
 {
@@ -12,6 +14,18 @@ public class Account : IAccountService
 
     public User RegisterUser(string username, string password)
     {
+        byte[] salt = RandomNumberGenerator.GetBytes(16);
+        string saltstring = GetHexString(salt);
+
+        byte[] fullbytes = System.Text.Encoding.UTF8.GetBytes(password + saltstring);
+
+        using (HashAlgorithm algorithm = SHA256.Create())
+        {
+            byte[] hash = algorithm.ComputeHash(fullbytes);
+            password = GetHexString(hash);
+        }
+        password += ":" + saltstring;
+
         var user = new User
         {
             Id = Guid.NewGuid(),
@@ -34,28 +48,59 @@ public class Account : IAccountService
         return user;
     }
 
-    
+    private static string GetHexString(byte[] array)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        foreach(byte b in array)
+        {
+            sb.Append(b.ToString("x2"));
+        }
+        return sb.ToString();
+    }
+
+
     public User? Login(string username, string password)
     {
-        var sql = @"SELECT * FROM users WHERE name = @username AND password = @password";
+        var sql = @"SELECT * FROM users WHERE name = @username";
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@username", username);
-        cmd.Parameters.AddWithValue("@password", password);
-        
-        using var reader = cmd.ExecuteReader();
-        if (!reader.Read()) {
-            return null;
-        }
+        // cmd.Parameters.AddWithValue("@password", password);
 
-        var user = new User {
+        using var reader = cmd.ExecuteReader();
+      while (reader.Read())
+      {
+        
+        var user = new User
+        {
             Id = reader.GetGuid(0),
             Name = reader.GetString(1),
             Password = reader.GetString(2)
         };
 
+        string [] passwordSplit = user.Password.Split(":");
+        string storedHash = passwordSplit[0];
+        string salt = passwordSplit[1];
+
+        byte[] fullbytes = Encoding.UTF8.GetBytes(password + salt);
+        string computeHash;
+        using(HashAlgorithm algorithm = SHA256.Create())
+        {
+            byte[] hash = algorithm.ComputeHash(fullbytes);
+            computeHash = GetHexString(hash);
+        }
+        
+        if (!storedHash.Equals(computeHash))
+        {
+            continue;
+        }
+
         loggedInUser = user.Id;
 
         return user;
+      }
+
+        return null;
     }
 
     public void Logout()
@@ -65,7 +110,7 @@ public class Account : IAccountService
 
     public User? GetLoggedInUser()
     {
-        if (loggedInUser == null) 
+        if (loggedInUser == null)
         {
             return null;
         }
@@ -73,13 +118,14 @@ public class Account : IAccountService
         var sql = @"SELECT * FROM users WHERE user_id = @id";
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@id", loggedInUser);
-        
+
         using var reader = cmd.ExecuteReader();
-        if (!reader.Read()) {
+        if (!reader.Read())
+        {
             return null;
         }
 
-        var user = new User 
+        var user = new User
         {
             Id = reader.GetGuid(0),
             Name = reader.GetString(1),
@@ -91,8 +137,8 @@ public class Account : IAccountService
 
     public void RemoveUser()
     {
-    var user = GetLoggedInUser();
-       
+        var user = GetLoggedInUser();
+
 
         var sql = @"
         BEGIN;
@@ -102,10 +148,10 @@ public class Account : IAccountService
   DELETE FROM users 
   WHERE user_id = @userId;
 COMMIT;";
-using var cmd = new NpgsqlCommand(sql, connection);
-cmd.Parameters.AddWithValue("@userId", user.Id);
-cmd.ExecuteNonQuery();
-Console.WriteLine($"{Colours.RED} your account has been deleted!{Colours.NORMAL}");
+        using var cmd = new NpgsqlCommand(sql, connection);
+        cmd.Parameters.AddWithValue("@userId", user.Id);
+        cmd.ExecuteNonQuery();
+        Console.WriteLine($"{Colours.RED} your account has been deleted!{Colours.NORMAL}");
 
 
     }
