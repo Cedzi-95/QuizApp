@@ -14,7 +14,7 @@ public abstract class Menu
     {
         if(string.IsNullOrWhiteSpace(inputCommand))
         {
-            throw new ArgumentException("Command cannot be emply");
+            throw new ArgumentException("Command cannot be empty");
         }
 
         string[] commandParts = inputCommand.Split(" ");
