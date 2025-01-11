@@ -42,7 +42,7 @@ public class QuizCommand : Command
             }
         }
 
-
+           Console.WriteLine($"{Colours.YELLOW}\n{categoryName} questions are over, press key to go back to the menu{Colours.NORMAL}");
             Console.ReadKey();
             menuService.SetMenu(new UserMenu(accountService, menuService, quizService));
 
