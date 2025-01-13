@@ -4,9 +4,7 @@ public abstract class Command
     protected IAccountService accountService;
     protected IMenuService menuService;
     protected IQuizService quizService;
-    
-
-
+    private string v;
 
     public Command (string name, IAccountService accountService, IMenuService menuService,IQuizService quizService)
     {
@@ -16,7 +14,12 @@ public abstract class Command
         this.quizService = quizService;
     }
 
-
+    protected Command(string v, IAccountService accountService, IMenuService menuService)
+    {
+        this.v = v;
+        this.accountService = accountService;
+        this.menuService = menuService;
+    }
 
     public abstract void Execute(string [] args);
 }

@@ -1,6 +1,8 @@
 using Npgsql;
 public class Quiz : IQuizService
 {
+
+
       private NpgsqlConnection connection;
     
     public Quiz( NpgsqlConnection connection)
@@ -92,33 +94,31 @@ public class Quiz : IQuizService
         return questions;
     }
 
-    public List<UserAnswer> GetUserHistory(Guid userId)
-    { // question_id | selected_option_id | is_correct
-       var sql = @"SELECT question_id, selected_option_id, is_correct
-       FROM user_answers WHERE user_id = @userId";
-       using var cmd = new NpgsqlCommand(sql, connection);
-       cmd.Parameters.AddWithValue("@userId", userId);
+   public List<UserAnswer> GetUserHistory(Guid userId)
+{
+    var userAnswers = new List<UserAnswer>();
+    var sql = @"SELECT answer_id, user_id, question_id, selected_option_id, is_correct
+                FROM user_answers
+                WHERE user_id = @userId";
 
-       using var reader = cmd.ExecuteReader();
+    using var cmd = new NpgsqlCommand(sql, connection);
+    cmd.Parameters.AddWithValue("@userId", userId);
 
-       List<UserAnswer> Answers = new List <UserAnswer>();
-
-       while(reader.Read())
-       {
-        Answers.Add(new UserAnswer
+    using var reader = cmd.ExecuteReader();
+    while (reader.Read())
+    {
+        userAnswers.Add(new UserAnswer
         {
-           
-             QuestionId = reader.GetInt32(0),         // Första kolumnen (index 0)
-            SelectedOptionId = reader.GetInt32(1),   // Andra kolumnen (index 1)
-            IsCorrect = reader.GetBoolean(2),        // Tredje kolumnen (index 2)
-            UserId = userId                  
-
+            Id = reader.GetInt32(0), // answer_id
+            UserId = reader.GetGuid(1),
+            QuestionId = reader.GetInt32(2),
+            SelectedOptionId = reader.GetInt32(3),
+            IsCorrect = reader.GetBoolean(4)
         });
-       }
-       return Answers;
-
-
     }
+
+    return userAnswers;
+}
 
     public int GetUserScore(Guid userId)
     {
@@ -127,13 +127,9 @@ public class Quiz : IQuizService
 
        using var cmd = new NpgsqlCommand(sql, connection);
        cmd.Parameters.AddWithValue("@userId", userId);
-       
-    
+
+
        return Convert.ToInt32(cmd.ExecuteScalar());
-
-
-
-
     }
 
     public bool SubmitAnswer(Guid userId, int questionId, int selectedOptionId)
