@@ -20,7 +20,7 @@ public class UserMenu : Menu
         Console.WriteLine($"{Colours.GREEN}[category]{Colours.NORMAL} View Categories");
         Console.WriteLine($"{Colours.GREEN}[quiz]{Colours.NORMAL} Take Quiz");
         Console.WriteLine($"{Colours.GREEN}[score]{Colours.NORMAL} View your total Score");
-        Console.WriteLine($"{Colours.GREEN}[history]{Colours.NORMAL} View History");
+        Console.WriteLine($"{Colours.GREEN}[quiz-history]{Colours.NORMAL} View History");
         Console.WriteLine($"{Colours.GREEN}[delete-account]{Colours.NORMAL} to delete your account");
         Console.WriteLine($"{Colours.RED}[exit]{Colours.NORMAL} Logout");
 
