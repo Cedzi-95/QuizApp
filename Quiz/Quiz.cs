@@ -4,9 +4,7 @@ public class Quiz : IQuizService
 
 
       private NpgsqlConnection connection;
-    //   private IAccountSerice accountService;
-    //   private IMenuService menuService;
-
+    
     public Quiz( NpgsqlConnection connection)
     {
         this.connection = connection;
@@ -33,7 +31,8 @@ public class Quiz : IQuizService
     }
 
     public Category GetCategory(string name)
-    { Category category = new Category();
+    { 
+        Category category = new Category();
        var sql = @"SELECT category_id, name, description FROM categories
        WHERE name = @name ";
        using var cmd = new NpgsqlCommand(sql, connection);
