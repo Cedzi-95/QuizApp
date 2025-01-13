@@ -30,7 +30,7 @@ public class Quiz : IQuizService
 
     public Category GetCategory(string name)
     { 
-        Category category = new Category();
+        
        var sql = @"SELECT category_id, name, description FROM categories
        WHERE name = @name ";
        using var cmd = new NpgsqlCommand(sql, connection);
@@ -93,7 +93,7 @@ public class Quiz : IQuizService
     }
 
     public List<UserAnswer> GetUserHistory(Guid userId)
-    { // question_id | selected_option_id | is_correct
+    { 
        var sql = @"SELECT question_id, selected_option_id, is_correct
        FROM user_answers WHERE user_id = @userId";
        using var cmd = new NpgsqlCommand(sql, connection);
