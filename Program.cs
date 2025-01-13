@@ -39,16 +39,9 @@ class Program
     answer_id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES users(user_id),
     question_id INTEGER REFERENCES questions(question_id) ON DELETE CASCADE,
-<<<<<<< HEAD
-    selected_option_id INTEGER REFERENCES question_options(option_id),
-    is_correct BOOLEAN NOT NULL
-);";
-
-=======
     selected_option_id INTEGER REFERENCES question_options(option_id) ON DELETE CASCADE,
     is_correct BOOLEAN NOT NULL
     );";
->>>>>>> master
      using var cmd = new NpgsqlCommand(createTableSql, connection);
         cmd.ExecuteNonQuery();
 
