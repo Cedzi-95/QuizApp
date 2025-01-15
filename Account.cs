@@ -142,12 +142,12 @@ public class Account : IAccountService
 
         var sql = @"
         BEGIN;
-  DELETE FROM user_answers 
-  WHERE user_id = @userId;
+        DELETE FROM user_answers 
+        WHERE user_id = @userId;
   
-  DELETE FROM users 
-  WHERE user_id = @userId;
-COMMIT;";
+        DELETE FROM users 
+        WHERE user_id = @userId;
+        COMMIT;";
         using var cmd = new NpgsqlCommand(sql, connection);
         cmd.Parameters.AddWithValue("@userId", user.Id);
         cmd.ExecuteNonQuery();
