@@ -109,7 +109,7 @@ public class Quiz : IQuizService
     {
         userAnswers.Add(new UserAnswer
         {
-            Id = reader.GetInt32(0), // answer_id
+            Id = reader.GetInt32(0), 
             UserId = reader.GetGuid(1),
             QuestionId = reader.GetInt32(2),
             SelectedOptionId = reader.GetInt32(3),

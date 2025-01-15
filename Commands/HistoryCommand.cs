@@ -24,7 +24,7 @@ public class HistoryCommand : Command
 
         Console.WriteLine($"{Colours.YELLOW}Category: {Colours.NORMAL}{categoryName}, " +
                           $"{Colours.YELLOW}Question: {Colours.NORMAL}{questionText}, " +
-                          $"{Colours.YELLOW}Correct: {Colours.NORMAL}{answer.IsCorrect}");
+                          $"{Colours.YELLOW}Correct: {(answer.IsCorrect ? Colours.GREEN : Colours.RED)}{answer.IsCorrect}{Colours.NORMAL}");
     }
 
     Console.WriteLine("\nPress any key to return to menu..");
