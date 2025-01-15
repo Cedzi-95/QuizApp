@@ -65,7 +65,6 @@ public class Account : IAccountService
         var sql = @"SELECT * FROM users WHERE name = @username";
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@username", username);
-        // cmd.Parameters.AddWithValue("@password", password);
 
         using var reader = cmd.ExecuteReader();
       while (reader.Read())

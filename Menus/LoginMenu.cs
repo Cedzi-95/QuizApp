@@ -10,10 +10,10 @@ public LoginMenu(IAccountService accountService, IMenuService menuService, IQuiz
     public override void Display()
     {
         Console.Clear();
-          Console.WriteLine($"{Colours.GREEN}               \nWELCOME TO YOUR QUIZ APP  {Colours.NORMAL}");
-        Console.WriteLine("---------------------------------------------------------");
-        Console.WriteLine($"||login <username> <password> - Log into your account");
-        Console.WriteLine($"||register-user <username> <password> - Create a new account");
+          Console.WriteLine($"-----------------------------------------------------{Colours.GREEN} \nWELCOME TO YOUR QUIZ APP{Colours.NORMAL}");
+        Console.WriteLine("-------------------------------------------------------------");
+        Console.WriteLine($"|{Colours.YELLOW}Login{Colours.NORMAL}{Colours.GREEN} <username> <password> {Colours.NORMAL}- Log into your account        |");
+        Console.WriteLine($"|{Colours.YELLOW}Register-user{Colours.NORMAL} {Colours.GREEN}<username> <password>{Colours.NORMAL} - Create a new account |");
         Console.WriteLine("-------------------------------------------------------------");
     }
 }
